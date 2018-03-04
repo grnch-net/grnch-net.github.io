@@ -247,7 +247,7 @@ function drawSymbols() {
 		let drag = false;
 		let minPos, maxPos;
 		graphics.interactive = true;
-	    graphics.on('pointerover', (event) => {
+	    graphics.on('touchstart', (event) => {
 			if (!minPos) {
 				minPos = { ...event.data.global };
 				maxPos = { ...event.data.global };
@@ -257,7 +257,7 @@ function drawSymbols() {
 			char.state.addAnimation(0, 'red_worry_loop', true, 0);
 		});
 		let isWinSymbol = symbolID == winSymbol;
-	    graphics.on('pointermove', (event) => {
+	    graphics.on('touchmove', (event) => {
 			if (!drag) return;
 			let pos = event.data.global;
 			if (pos.x < minPos.x) minPos.x = pos.x;
@@ -279,7 +279,7 @@ function drawSymbols() {
 				if(++openCount == 7) finishGame();
 			}
 		});
-	    graphics.on('pointerout', () => {
+	    graphics.on('touchend', () => {
 			drag = false;
 			char.state.setAnimation(0, 'red_worry_end', false)
 			char.state.addAnimation(0, 'red_idle_loop', true, 0);
@@ -308,7 +308,7 @@ function drawBonusSymbol() {
 	let drag = false;
 	let minPos, maxPos;
 	graphics.interactive = true;
-	graphics.on('pointerover', (event) => {
+	graphics.on('touchstart', (event) => {
 		if (!minPos) {
 			minPos = { ...event.data.global };
 			maxPos = { ...event.data.global };
@@ -317,7 +317,7 @@ function drawBonusSymbol() {
 		char.state.setAnimation(0, 'red_worry_st', false)
 		char.state.addAnimation(0, 'red_worry_loop', true, 0);
 	});
-	graphics.on('pointermove', (event) => {
+	graphics.on('touchmove', (event) => {
 		if (!drag) return;
 		let pos = event.data.global;
 		if (pos.x < minPos.x) minPos.x = pos.x;
@@ -334,7 +334,7 @@ function drawBonusSymbol() {
 			if(++openCount == 7) finishGame();
 		}
 	});
-	graphics.on('pointerout', () => {
+	graphics.on('touchend', () => {
 		drag = false;
 		char.state.setAnimation(0, 'red_worry_end', false)
 		char.state.addAnimation(0, 'red_idle_loop', true, 0);
@@ -350,9 +350,9 @@ function createRendererMask() {
     rendererMask.mask = renderTextureSprite;
 
 	gameGroup.interactive = true;
-    gameGroup.on('pointerover', pointerDown);
-    gameGroup.on('pointerout', pointerUp);
-    gameGroup.on('pointermove', pointerMove);
+    gameGroup.on('touchstart', pointerDown);
+    gameGroup.on('touchend', pointerUp);
+    gameGroup.on('touchmove', pointerMove);
 
     let dragging = false;
 
@@ -414,7 +414,7 @@ function drawStartScreen() {
 	startButton.interactive = true;
 	startBarGroup.addChild(startButton);
 
-	startButton.on('pointertap', pointerUp);
+	startButton.on('touchend', pointerUp);
 	function pointerUp(event) {
 		startButton.interactive = false;
 		startAnimation = performance.now();
