@@ -120,6 +120,7 @@ let winCoin;
 let symbolList;
 let gameGroup;
 let openCount;
+let currentAnimation = 'idle';
 function startGame(loader, res) {
 	symbolList = [];
 	openCount = 0;
@@ -244,28 +245,33 @@ function drawSymbols() {
 		graphics.drawRect(fieldsPosition[i][0] - 140, fieldsPosition[i][1] - 140, 280, 280);
 		gameGroup.addChild(graphics);
 
-		let drag = false;
+		let startPointX = fieldsPosition[i][0] - 140;
+		let startPointY = fieldsPosition[i][1] - 140;
+
 		let minPos, maxPos;
 		graphics.interactive = true;
-	    graphics.on('touchstart', (event) => {
+
+		let isWinSymbol = symbolID == winSymbol;
+
+		let touchmove = (event) => {
+
+			let pos = event.data.global;
+			if (pos.x < startPointX || pos.x > startPointX+280
+				|| pos.y < startPointY || pos.y > startPointY+280
+			) {
+				return;
+			}
+
 			if (!minPos) {
 				minPos = { x: event.data.global.x, y: event.data.global.y };
 				maxPos = { x: event.data.global.x, y: event.data.global.y };
 			}
-			drag = true;
-			char.state.setAnimation(0, 'red_worry_st', false)
-			char.state.addAnimation(0, 'red_worry_loop', true, 0);
-		});
-		let isWinSymbol = symbolID == winSymbol;
-	    graphics.on('touchmove', (event) => {
-			if (!drag) return;
-			let pos = event.data.global;
 			if (pos.x < minPos.x) minPos.x = pos.x;
 			if (pos.x > maxPos.x) maxPos.x = pos.x;
 			if (pos.y < minPos.y) minPos.y = pos.y;
 			if (pos.y > maxPos.y) maxPos.y = pos.y;
 			let length = ((minPos.x - maxPos.x) ** 2 + (minPos.y - maxPos.y) ** 2)**0.5;
-			if (length >= 310) {
+			if (length >= 280) {
 				drag = false;
 
 				gameGroup.addChild(filedBG, symbol)
@@ -278,9 +284,16 @@ function drawSymbols() {
 
 				if(++openCount == 7) finishGame();
 			}
+
+		}
+	    graphics.on('touchmove', touchmove);
+	    graphics.on('pointermove', touchmove);
+
+		graphics.on('pointerover', ()=>{
+			char.state.setAnimation(0, 'red_worry_st', false)
+			char.state.addAnimation(0, 'red_worry_loop', true, 0);
 		});
-	    graphics.on('touchend', () => {
-			drag = false;
+	    graphics.on('pointerout',  ()=>{
 			char.state.setAnimation(0, 'red_worry_end', false)
 			char.state.addAnimation(0, 'red_idle_loop', true, 0);
 		});
@@ -305,21 +318,21 @@ function drawBonusSymbol() {
 	graphics.drawRect(614, 367, 368, 368);
 	gameGroup.addChild(graphics);
 
-	let drag = false;
 	let minPos, maxPos;
 	graphics.interactive = true;
-	graphics.on('touchstart', (event) => {
+
+	let touchmove = (event) => {
+		let pos = event.data.global;
+		if (pos.x < 614 || pos.x > 614+368
+			|| pos.y < 367 || pos.y > 367+368
+		) {
+			return;
+		}
+
 		if (!minPos) {
 			minPos = { x: event.data.global.x, y: event.data.global.y };
 			maxPos = { x: event.data.global.x, y: event.data.global.y };
 		}
-		drag = true;
-		char.state.setAnimation(0, 'red_worry_st', false)
-		char.state.addAnimation(0, 'red_worry_loop', true, 0);
-	});
-	graphics.on('touchmove', (event) => {
-		if (!drag) return;
-		let pos = event.data.global;
 		if (pos.x < minPos.x) minPos.x = pos.x;
 		if (pos.x > maxPos.x) maxPos.x = pos.x;
 		if (pos.y < minPos.y) minPos.y = pos.y;
@@ -333,14 +346,21 @@ function drawBonusSymbol() {
 
 			if(++openCount == 7) finishGame();
 		}
+	};
+	graphics.on('touchmove', touchmove);
+	graphics.on('pointermove', touchmove);
+
+	graphics.on('pointerover', ()=>{
+		char.state.setAnimation(0, 'red_worry_st', false)
+		char.state.addAnimation(0, 'red_worry_loop', true, 0);
 	});
-	graphics.on('touchend', () => {
-		drag = false;
+	graphics.on('pointerout',  ()=>{
 		char.state.setAnimation(0, 'red_worry_end', false)
 		char.state.addAnimation(0, 'red_idle_loop', true, 0);
 	});
 }
 
+let dragging = false;
 function createRendererMask() {
 	let renderTexture = PIXI.RenderTexture.create(app.screen.width, app.screen.height);
 	let renderTextureSprite = new PIXI.Sprite(renderTexture);
@@ -352,9 +372,19 @@ function createRendererMask() {
 	gameGroup.interactive = true;
     gameGroup.on('touchstart', pointerDown);
     gameGroup.on('touchend', pointerUp);
-    gameGroup.on('touchmove', pointerMove);
+    gameGroup.on('touchmove', (event)=>{
+		pointerMove(event);
+		if (currentAnimation == 'idle') {
+			currentAnimation = 'worry';
+			char.state.setAnimation(0, 'red_worry_st', false)
+			char.state.addAnimation(0, 'red_worry_loop', true, 0);
+		}
+	});
 
-    let dragging = false;
+    gameGroup.on('pointerover', pointerDown);
+    gameGroup.on('pointerout', pointerUp);
+    gameGroup.on('pointermove', pointerMove);
+
 
 	let brush = new PIXI.Graphics();
 	brush.beginFill(0xffffff);
@@ -375,14 +405,23 @@ function createRendererMask() {
 
     function pointerUp(event) {
         dragging = false;
+		if (currentAnimation == 'worry') {
+			currentAnimation = 'idle';
+			char.state.setAnimation(0, 'red_worry_end', false)
+			char.state.addAnimation(0, 'red_idle_loop', true, 0);
+		}
     }
 }
 
 function changeAnimation(key) {
+	currentAnimation = key;
 	char.state.setAnimation(0, key+'_st', false)
 	char.state.addAnimation(0, key+'_loop', false, 0);
 	char.state.addAnimation(0, key+'_end', false, 0);
 	char.state.addAnimation(0, 'red_idle_loop', true, 0);
+	setTimeout(()=>{
+		currentAnimation = 'idle';
+	}, 2000);
 }
 
 let startAnimation;
@@ -415,6 +454,7 @@ function drawStartScreen() {
 	startBarGroup.addChild(startButton);
 
 	startButton.on('touchend', pointerUp);
+	startButton.on('mouseup', pointerUp);
 	function pointerUp(event) {
 		startButton.interactive = false;
 		startAnimation = performance.now();
