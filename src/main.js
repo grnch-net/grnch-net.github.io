@@ -249,8 +249,8 @@ function drawSymbols() {
 		graphics.interactive = true;
 	    graphics.on('touchstart', (event) => {
 			if (!minPos) {
-				minPos = { ...event.data.global };
-				maxPos = { ...event.data.global };
+				minPos = { x: event.data.global.x, y: event.data.global.y };
+				maxPos = { x: event.data.global.x, y: event.data.global.y };
 			}
 			drag = true;
 			char.state.setAnimation(0, 'red_worry_st', false)
@@ -310,8 +310,8 @@ function drawBonusSymbol() {
 	graphics.interactive = true;
 	graphics.on('touchstart', (event) => {
 		if (!minPos) {
-			minPos = { ...event.data.global };
-			maxPos = { ...event.data.global };
+			minPos = { x: event.data.global.x, y: event.data.global.y };
+			maxPos = { x: event.data.global.x, y: event.data.global.y };
 		}
 		drag = true;
 		char.state.setAnimation(0, 'red_worry_st', false)
