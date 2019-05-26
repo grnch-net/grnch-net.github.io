@@ -1,40 +1,307 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-
 <head>
-	<meta charset="utf-8">
-	<title>mobile-pixi task</title>
+	<title>AVE</title>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	
+	<link rel="stylesheet" href="css/grnch.css">
+	<link rel="stylesheet" href="css/ave.css">
+	<link rel="stylesheet" href="css/animBlock.css">
+	
+	<script src="js/grnch.js"></script>
+	<script src="js/ave.js"></script>
+	<script src="js/ave/docReady.js"></script>
+	<script src="js/ave/prefabs.js"></script>
+	<script src="js/ave/interface.js"></script>
+	<script src="js/ave/edit.js"></script>
+	<script src="js/ave/history.js"></script>
+	<script src="js/ave/controller.js"></script>
+	<script src="js/ave/animation.js"></script>
+	<script src="js/animPonyWalk.js"></script>
 </head>
-<style>
-	@font-face {
-		font-family: "DRAguSansBlack";
-		src: url("fonts/DRAguSans-Black.ttf") format('woff');
-	}
-	* {
-		margin: 0;
-		padding: 0;
-	}
-	body {
-		background: black;
-	}
-	canvas {
-		position: absolute;
-		max-width: 100%;
-		max-height: 100%;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-	}
-	.text {
-		font-family: DRAguSansBlack;
-	}
-</style>
-<script src="src/lib/pixi.min.js"></script>
-<script src="src/lib/pixi-spine.js"></script>
-<script defer src="src/main.js"></script>
-
 <body>
-	<span class="text"></span>
-</body>
+	<!-- Context Menu -->
+	<div id="ave-contextMenu">
+		<div id="ave-cmBlock-layersList">
+			<div class="cm-button" onclick="ave.controller.layersList._contextMenu.OpenFolder();">Open/Close</div>
+			<div class="cm-button" onclick="ave.controller.layersList._contextMenu.Select();">+/- Select</div>
+			<div class="cm-button" onclick="ave.controller.layersList._contextMenu.Rename();">Rename</div>
+		</div>
+		<div id="ave-cmBlock-layersListItem">
+			<div class="cm-button" onclick="ave.controller.layersList._contextMenu.SelectLayerItem();">+/- Select</div>
+			<div class="cm-button" onclick="ave.controller.layersList._contextMenu.CheckAnimLayerItem.CreateAnimPath();">AnimPath</div>
+		</div>
+	</div>
+	
+	<!-- Blackout -->
+	<div id="ave-blackout"></div>
+	<div id="ave-blackoutNull"></div>
 
+	<!-- Toolbar -->
+	<div class="ave-toolbar">
+		<div class="logo"><img src="img/logo.png" alt="AVE"></div>
+		<div class="options">
+			<!-- <div class="button" onclick="ave.controller.project.web.OpenSaveBar();">Save Web</div> -->
+			<div class="button" onclick="ave.controller.project.animation.OpenLoadBar();">Load Anim</div>
+			<div class="button" onclick="ave.controller.project.animation.OpenSaveBar();">Save Anim</div>
+			<div class="button" onclick="ave.controller.project.svg.OpenLoadBar();">Load SVG</div>
+			<div class="button" onclick="ave.controller.project.svg.OpenSaveBar();">Save SVG</div>
+			<!-- <div class="button" onclick="ave.controller.scene.zoom.plus();">+</div> -->
+			<!-- <div class="button" onclick="ave.controller.scene.zoom.minus();">-</div> -->
+		</div>
+		<div class="tools">
+			<div id="ave-handTool" class="button" onclick="ave.controller.scene.tools.mode = 'Hand'"><img src="img/handToolIco.png" alt="Hand Tool" />Hand</div>
+			<div id="ave-moveTool" class="button" onclick="ave.controller.scene.tools.mode = 'Move'"><img src="img/moveToolIco.png" alt="Move Tool" />Move</div>
+			<div id="ave-penTool" class="button" onclick="ave.controller.scene.tools.mode = 'Pen'"><img src="img/penToolIco.png" alt="Pen Tool" />Pen</div>
+			<div id="ave-editTool" class="button" onclick="ave.controller.scene.tools.mode = 'Edit'"><img src="img/editPointToolIco.png" alt="Point Edit Tool" />Edit</div>
+			<div id="ave-selectTool" class="button" onclick="ave.controller.scene.tools.mode = 'Select'"><img src="img/marqueeToolIco.png" alt="Select Tool" />Select</div>
+			<div id="ave-transformTool" class="button" onclick="ave.controller.scene.tools.mode = 'Transform'"><img src="img/moveModeIco.png" alt="Transformation" />Rotation</div>
+		</div>
+		
+		<div class="optionsToolBar">
+			<div id="ave-optionsToolBar-handTool" class="area-left">
+			
+			</div>
+			
+			<div id="ave-optionsToolBar-moveTool" class="area-left">
+				<div id="ave-optionsToolBar-moveTool-move" onclick="ave.controller.scene.tools.move.mode = 'Move';" class="button activeButton"><img src="img/moveModeIco.png" alt="Move Mode" />Move</div>
+				<div id="ave-optionsToolBar-moveTool-select" onclick="ave.controller.scene.tools.move.mode = 'Select';" class="button"><img src="img/addSelectPointModeIco.png" alt="Select Mode(Ctrl)" />Select</div>
+			</div>
+			
+			<div id="ave-optionsToolBar-penTool" class="area-left">
+				<div id="ave-optionsToolBar-penTool-create" onclick="ave.controller.scene.tools.pen.mode = 'Create';" class="button activeButton"><img src="img/penToolIco.png" alt="Pen Tool" />Create</div>
+				<div id="ave-optionsToolBar-penTool-addAndRemove" onclick="ave.controller.scene.tools.pen.mode = 'AddOrDel';" class="button"><img src="img/penToolIco.png" alt="Pen Tool" />Add/Del</div>
+			</div>
+			
+			<div id="ave-optionsToolBar-editTool" class="area-left">
+				<div id="ave-optionsToolBar-editTool-move" onclick="ave.controller.scene.tools.edit.mode = 'Move';" class="button activeButton"><img src="img/moveModeIco.png" alt="Move Mode" />Move</div>
+				<div id="ave-optionsToolBar-editTool-select" onclick="ave.controller.scene.tools.edit.mode = 'Select';" class="button"><img src="img/addSelectPointModeIco.png" alt="Select Mode(Ctrl)" />Select</div>
+				<div id="ave-optionsToolBar-editTool-curves" onclick="ave.controller.scene.tools.edit.mode = 'Curves';" class="button"><img src="img/curveModeIco.png" alt="Curve Mode(Alt)" />Curves</div>
+			</div>
+			
+			<div id="ave-optionsToolBar-selectTool" class="area-left">
+				<div id="ave-optionsToolBar-selectTool-default" onclick="ave.controller.scene.tools.select.mode = 'Default';" class="button activeButton"><img src="img/marqueeToolIco.png" alt="Default Mode" />Default</div>
+				<div id="ave-optionsToolBar-selectTool-add" onclick="ave.controller.scene.tools.select.mode = 'Add';" class="button"><img src="img/marqueeToolIco.png" alt="Default Mode" />Add</div>
+				<div id="ave-optionsToolBar-selectTool-remove" onclick="ave.controller.scene.tools.select.mode = 'Remove';" class="button"><img src="img/marqueeToolIco.png" alt="Default Mode" />Remove</div>
+			</div>
+			
+			<div id="ave-optionsToolBar-transformTool" class="area-left">
+				<!-- <div id="ave-optionsToolBar-transformTool-default" onclick="ave.controller.scene.tools.transform.mode = 'Default';" class="button activeButton"><img src="img/moveModeIco.png" alt="Default Mode" />Default</div> -->
+			</div>
+			
+			<div id="ave-optionsToolBar-graphic" class="area-right" style="display: block;">
+				<div class="param">Fill: 
+					<input id="ave-optionsToolBar-graphic-fill" onchange="ave.controller.toolbar.options.graphic.fill(this.value)" type="color" size="6" >
+				</div>
+				
+				<div class="param">Stroke: 
+					<input id="ave-optionsToolBar-graphic-stroke" onchange="ave.controller.toolbar.options.graphic.stroke(this.value)" type="color" size="6" >
+				</div>
+				
+				<div class="param">Stroke width: 
+					<input id="ave-optionsToolBar-graphic-strokeWidth" onchange="ave.controller.toolbar.options.graphic.strokeWidth(this.value)" type="number" >
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Block 1 -->
+	<div id="ave-editorBlockLeft">
+		<!-- Scene -->
+		<div id="ave-svgScene">
+			<div id="ave-sceneLock" class="ave-sceneLock"></div>
+			<div id="ave-svgArea" class="ave-svgArea">
+			<!-- fill="#c090e0" stroke="#9060b0" stroke-width="2" -->
+				<svg id="ave-svgWorkSpace" class="ave-svgWorkSpace" viewBox="0 0 550 400" overflow="visible" >
+					<defs>
+						<g id="ave-proto-svgAnchor" >
+							<circle id="ave-svgAnchor-circle" r="4" stroke-width="1" stroke="black" fill="white"></circle>
+							<polyline id="ave-svgAnchor-line1" points="0,-7 0,7" stroke="black" stroke-width="1" />
+							<polyline id="ave-svgAnchor-line2" points="-7,0 7,0" stroke="black" stroke-width="1" />
+						</g>
+						<circle id="ave-svgPoint" r="3.5" stroke-width="2" stroke="#9C9C9C" fill="white"></circle>
+						<circle id="ave-svgAnimPoint" r="3.5" stroke-width="2" stroke="#24a0ff" fill="#24a0ff"></circle>
+						<circle id="ave-svgPointActive" r="3.5" stroke-width="2" stroke="#FF0445" fill="white"></circle>
+						<circle id="ave-svgSupPoint" r="3" stroke-width="1" stroke="rgba(36, 160, 255, 0)" fill="#FF0445"></circle>
+						<circle id="ave-svgAnimSupPoint" r="3" stroke-width="1" stroke="rgba(36, 160, 255, 0)" fill="#24a0ff"></circle>
+					</defs>
+					
+					<g id="ave-svgContent" stroke-linecap="round" fill="none"></g>
+					
+					<g id="ave-svgLayersPath" fill="none" stroke="black" stroke-width="1.2"></g>
+					
+					<g id="ave-svgAnimPath" fill="none" stroke="#335393" stroke-width="1"></g>
+					
+					<g id="ave-svgItemsPath" class="ave-svgItemsPath"  stroke="rgba(0,0,0,0)" stroke-width="7" style="display: none;"></g>
+					
+					<g id="ave-svgItemsAnimPath" class="ave-svgItemsPath"  stroke="rgba(0,0,0,0)" stroke-width="7" style="display: none;"></g>
+					
+					<g id="ave-svgLabels" stroke-width="1">
+						<g id="ave-svgLayers" >
+							<path id="ave-svgSelectArea" d="M 100 100 L 100 200 L 200 200 L 200 100 Z" />
+						</g>
+						<g id="ave-svgAnim" ></g> <!-- anim  -->
+						<use id="ave-svgAnchor" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ave-proto-svgAnchor" x="10" y="10" style="display: none;"></use>
+					</g>
+				</svg>
+			</div>
+		</div>
+		
+		<!-- Animation -->
+		<div id="ave-animation">
+			<div id="ave-animationTimeBlock">0</div>
+			<div class="ave-animationArea">
+				<div id="ave-animationBlockLeft">
+					<div class="optionsPanel">
+						<!-- <div class="button" onclick="ave.controller.animation.options.settings.Open();"><img src="img/settingsIco.png" alt="Settigns" /></div> -->
+						<div class="button" onclick="ave.controller.animation.Stop();"><img src="img/stopIco.png" alt="Pause" /></div>
+						<div class="button" onclick="ave.controller.animation.Pause();"><img src="img/pauseIco.png" alt="Pause" /></div>
+						<div class="button" onclick="ave.controller.animation.Play();"><img src="img/playIco.png" alt="Play" /></div>
+						<div class="button" onclick="ave.animation.EyeAnimSvgElement();"><img id="ave-animation-options-seeImg" src="img/eyeActiveIcon.png" alt="Anim See" /></div>
+					</div>
+					<div id="ave-animation-itemsList" class="itemsList"></div>
+				</div>
+				<div id="ave-animationBlockRight">
+					<div class="all-area">
+						<div id="ave-animation-handArea"></div>
+						<div class="timelineBorder">
+						</div>
+						<div id="ave-animation-timeline-container">
+							<svg id="ave-animation-timeline">
+								<defs>
+									<rect id="ave-timeline-longLine" y="20" />
+									<rect id="ave-timeline-shortLine" y="25" />
+									<rect id="ave-timeline-itemLine" y="12" />
+									<polyline id="ave-timeline-cursor" points="0,0 10,0 5,15" style="fill: crimson;" />
+									
+									<circle id="ave-animation-linePoint" r="5" fill="#24a0ff" />
+								</defs>
+								
+								<g id="ave-timeline-group"></g>
+								<use id="ave-timeline-cursorObj" xlink:href="#ave-timeline-cursor" x="5" ></use>
+							</svg>
+						</div>
+						<div id="ave-animation-itemsArea" class="itemsArea"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- SVG Load Bar -->
+	<div id="ave-svgLoadBar" class="ave-popupBar ave-centre">
+		<div>
+			<div>Past SVG.</div>
+			<textarea id="ave-svgLoadTextarea" rows="4">
+				<svg width="550" height="400">
+					<g id="prototype" fill="rgba(255,255,255,1)" stroke-width="2" stroke="black">
+					<!-- <g id="prototype" fill="#c090e0" stroke="#9060b0" stroke-width="2" > -->
+					<!-- Leg 1-2 -->
+					<path id="ObjLeg1-2" d="M 217 235 C 217 235 217 235 217 235 C 231 283 231 283 229 313 C 225 347 220 354 200 354 C 174 353 173 352 181 338 C 198 297 198 297 187 239 C 187 239 187 239 187 239 "></path>
+					<!-- Leg 2-2 -->
+					<path id="ObjLeg2-2" d="M 281 203 C 294 224 294 224 280 261 L 280 266 C 279 253 294 260 298 277 C 308 307 308 307 309 338 C 308 355 300 357 286 359 C 270 361 259 359 268 340 C 277 318 277 318 271 294 C 268 279 268 279 257 271 C 239 256 239 256 237 234 "></path>
+					<!-- Body -->
+					<path id="ObjBody" d="M 233 156 Q 215 222 265 202 C 309 188 318 266 263 269 C 157 278 185 211 194 180"></path>
+					<!-- Leg 1-1 -->
+					<path id="ObjLeg1-1" d="M 224 246 C 224 246 224 246 224 246 C 237 294 237 294 235 324 C 231 358 224 366 205 366 C 179 366 179 363 187 349 C 202 307 202 307 198 246 C 198 246 198 246 198 246 "></path>
+					<!-- Leg 2-1 -->
+					<path id="ObjLeg2-1" d="M 293.6 208.8 C 305.6 225.8 304 231 290 268 L 290 273 C 289 260 304 267 308 284 C 318 314 318 314 319 345 C 318 362 315 365 297 368 C 270 368 269 366 278 347 C 287 325 287 325 282 296 C 280 286 281 285 266 274 C 248 259 248 259 246 237 "></path>
+					<!-- Head -->
+					<path id="ObjHead" d="M 236 149 C 226 212 137 199 132 168 C 131.4 162.6 131.8 161.8 137 160 C 141 159 140.8 157.2 141 151 C 141 107 195 90 223 103 C 240 124 240 124 236 149 "></path>
+					<!-- Ear -->
+					<path id="ObjEar" d="M 220 113 Q 221 98 230 86 Q 235 78 240 86 Q 264 116 235 152"></path>
+					</g>
+				</svg>
+			</textarea>
+			<div id="ave-svgLoadStatus" class="ave-status"></div>
+			<button onclick="ave.controller.project.svg.OnLoad()">Load</button>
+			<button onclick="ave.controller.project.svg.CloseLoadBar();">Close</button>
+		</div>
+	</div>
+	
+	<!-- SVG Save Bar -->
+	<div id="ave-svgSaveBar" class="ave-popupBar ave-centre">
+		<div>
+			<div>Copy SVG.</div>
+			<textarea id="ave-svgSaveTextarea" rows="4" readonly></textarea>
+			<div></div>
+			<button onclick="ave.controller.project.svg.CloseSaveBar();">Close</button>
+		</div>
+	</div>
+	
+	<!-- Animation Load Bar -->
+	<div id="ave-animLoadBar" class="ave-popupBar ave-centre">
+		<div>
+			<div>Past Animation.</div>
+			<textarea id="ave-animLoadTextarea" rows="4"></textarea>
+			<div id="ave-animLoadStatus" class="ave-status"></div>
+			<button onclick="ave.controller.project.animation.OnLoad()">Load</button>
+			<button onclick="ave.controller.project.animation.CloseLoadBar();">Close</button>
+			<button onclick="ave.controller.project.animation.OnLoad(animPonyWalk);">Load Test</button>
+		</div>
+	</div>
+	
+	<!-- Animation Save Bar -->
+	<div id="ave-animSaveBar" class="ave-popupBar ave-centre">
+		<div>
+			<div>Copy Animation.</div>
+			<textarea id="ave-animSaveTextarea" rows="4" readonly></textarea>
+			<div></div>
+			<button onclick="ave.controller.project.animation.CloseSaveBar();">Close</button>
+		</div>
+	</div>
+	
+	<!-- Save For Web -->
+	<div id="ave-webSaveBar" class="ave-popupBar ave-centre">
+		<div>
+			<div>Copy for Web.</div>
+			<textarea id="ave-webSaveTextarea" rows="4" readonly></textarea>
+			<div></div>
+			<button onclick="ave.controller.project.web.CloseSaveBar();">Close</button>
+		</div>
+	</div>
+	
+	<!-- Animation Settings Bar -->
+	<div id="ave-animationSettingsBar" class="ave-popupBar ave-centre">
+		<div>
+			<div>Animation Settings</div>
+			<form onsubmit="ave.controller.animation.options.settings.Save(this.fps.value, this.time.value); return false">
+				FPS:<input type="number" size="40" name="fps"><br>
+				Time:<input type="text" size="40" name="time"><br>
+				<input type="submit" value="Save">						
+			</form>
+			<button onclick="ave.controller.animation.options.settings.Close();">Close</button>
+		</div>
+	</div>
+	
+	<!-- LayersList -->
+	<div id="ave-layersList-bar">
+		<!-- <div class="grnch-titlePanel">
+			<div class="tab active">Layers</div>
+		</div> -->
+		<div id="ave-layerList-path" class="ave-layersPath">
+		...
+		</div>
+		<div id="ave-layersList-area" class="ave-layersList-area">
+			<div id="ave-layerList-content" class="content" ></div>
+		</div>
+		<div class="ave-layersOptionsPanel">
+			<div style="float: right; width: 15px; height: 100%;"></div>
+			<div class="item" onclick="ave.controller.layersList.button.Delete();"><img src="img/deleteIco.png" /></div>
+			<div class="item" onclick="ave.controller.layersList.button.Group();"><img src="img/folderOpenIco.png" /></div>
+			<div class="item" onclick="ave.controller.layersList.button.Layer();"><img src="img/layerIco.png" /></div>
+			<!-- <div class="item"><img src="img/eventIco.png" /></div> -->
+		</div>
+	</div>
+	
+	<!-- History -->
+	<div id="ave-history-bar">
+		<div class="ave-history-area">
+			<div id="ave-history-content" class="ave-history-content"></div>
+		</div>
+	</div>
+	
+</body>
+<script defer>ave.docReady();</script>
 </html>

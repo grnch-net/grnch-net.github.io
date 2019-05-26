@@ -1,0 +1,550 @@
+@font-face{font-family:helveticaneuecyr-light;src:url('fonts/helveticaneuecyr-light.otf');}
+@font-face{font-family:helveticaneuecyr-bold;src:url('fonts/helveticaneuecyr-bold.otf');}
+
+html {
+	cursor: default;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	
+	background: #232627;
+	cursor: default;
+    color: #c8cbcd;
+	font-family: helveticaneuecyr-light;
+	
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.ave-centre {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+
+	-moz-transform: translate3d( -50%, -50%, 0);
+	-ms-transform: translate3d( -50%, -50%, 0);
+	-webkit-transform: translate3d( -50%, -50%, 0);
+	-o-transform: translate3d( -50%, -50%, 0);
+	transform: translate3d( -50%, -50%, 0);
+}
+
+#ave-blackout {
+	z-index: 99;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	
+	background: rgba(0,0,0,0.5);
+}
+#ave-blackoutNull {
+	z-index: 99;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	
+	background: rgba(0,0,0,0);
+}
+
+/* Context Menu */
+#ave-contextMenu {
+	display: none;
+	z-index: 100;
+	position: absolute;
+	
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	border-right: 1px solid black;
+	
+	background-color: #3E494B;
+}
+
+#ave-cmBlock-layersList {
+	display: none;
+	position: relative;
+}
+#ave-cmBlock-layersListItem {
+	display: none;
+	position: relative;
+}
+
+#ave-contextMenu .cm-button {
+	border-bottom: 1px solid black;
+	padding: 9.5px;
+}
+
+#ave-contextMenu .cm-button:hover {
+	background-color: #596466;
+}
+
+/* Popup Bar */
+.ave-popupBar {
+	display: none;
+	z-index: 100;
+	width: 300px;
+	height: 300px;
+	
+    background: white;
+	border: 2px black solid;
+}
+
+/* ToolBar */
+.ave-toolbar {
+	position: relative;
+	width: 100%;
+	height: 80px;
+
+	background: #3e494b;
+}
+
+.ave-toolbar .button {
+	height: 20px;
+	padding: 10px;
+}
+.ave-toolbar .button:hover {
+	background: #4b5759;
+}
+.ave-toolbar .buttonActive {
+	background: #596466;
+}
+.ave-toolbar .buttonActive:hover  {
+	background: #596466;
+}
+
+.ave-toolbar .logo {
+	float: left;
+	width: 150px;
+	height: 40px;
+}
+
+.ave-toolbar .tools {
+	float: left;
+	height: 40px;
+	
+	border-left: 1px #2C3031 solid;
+}
+.ave-toolbar .tools .button {
+	float: left;
+	
+	/* border-right: 1px rgba(0,0,0,0.2) solid; */
+	border-right: 1px #2C3031 solid;
+}
+
+.ave-toolbar .options {
+	float: right;
+	height: 40px;
+}
+
+.ave-toolbar .options .button {
+	float: right;
+	
+	/* border-left: 1px rgba(0,0,0,0.2) solid; */
+	border-left: 1px #2C3031 solid;
+}
+
+.ave-toolbar .optionsToolBar {
+	float: left;
+	width: 100%;
+	height: 40px;
+
+	background: #596466;
+	/* border-top: 1px rgb(35, 38, 39) solid; */
+}
+
+.ave-toolbar .optionsToolBar .area-left {
+	display: none;
+	float: left:
+}
+
+.ave-toolbar .optionsToolBar .area-right {
+	display: none;
+	float: right;
+}
+
+.ave-toolbar .optionsToolBar .param {
+	float: left;
+    height: 20px;
+    margin: 4px 0;
+    padding: 6px;
+	
+	border-left: 1px #3A4144 solid;
+}
+
+.ave-toolbar .optionsToolBar .param input {
+	/* width: 100px; */
+	height: 20px;
+	padding: 0 2px;
+
+	border: none;
+	background: #ffffff !important;
+	outline: none;
+}
+
+.ave-toolbar .optionsToolBar .param input[type="number"] {
+	width: 40px;
+}
+
+.ave-toolbar .optionsToolBar .button {
+	float: left;
+    height: 20px;
+    margin: 4px 0;
+    padding: 5px;
+	
+	border-right: 1px #3A4144 solid;
+}
+
+.ave-toolbar .optionsToolBar .button:hover {
+	background: #697577;
+}
+
+.ave-toolbar .optionsToolBar .activeButton {
+	background: #4b5759;
+}
+.ave-toolbar .optionsToolBar .activeButton:hover {
+	background: #4b5759;
+}
+
+/* Block 1 */
+#ave-editorBlockLeft {
+	z-index: 2;
+	height: calc(100% - 82px);
+	top: 81px;
+	
+	background-color: #232627;
+}
+
+
+/* SVG Scene */
+#ave-svgScene {
+	width: 100%;
+	height: calc(100% - 62px);
+	top: 30px;
+}
+
+.ave-sceneLock {
+	display: none;
+	z-index: 2;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	
+	/* cursor: grab; */
+	cursor: -webkit-grab;
+}
+
+.ave-svgArea {
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	
+	/* overflow: auto; */
+	overflow: hidden;
+}
+
+.ave-svgArea .ave-svgWorkSpace {
+	position: relative;
+	display: block;
+	/* width: 800px;
+	height: 550px; */
+	width: 550px;
+	height: 400px;
+
+	background: white;
+	/* background: white url(../img/AnimBg/frame1.png); */
+	background-size: contain;
+}
+
+.svgRemoveMode use {
+	cursor: pointer;
+}
+/*
+.ave-svgWorkSpace .circleSupPoint {
+	r: 3;
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 1;
+    fill: #FF0445;
+} */
+
+.ave-svgWorkSpace .ave-svgItemsPath {
+	cursor: copy;
+}
+
+.ave-svgWorkSpace .supPointsPolyline {
+	stroke: #ff0042;
+	/* stroke-width: 1; */
+	fill: none;
+}
+
+#ave-svgSelectArea {
+	display: none;
+	stroke: teal;
+	fill: rgba(1, 245, 217, 0.27);
+	background: none;
+}
+
+/* LayersList */
+#ave-layersList-bar {
+	z-index: 1;
+	height: calc(100% - 112px);
+	top: 111px;
+	right: 0;
+}
+
+.ave-layersList-area {
+	position: relative;
+	width: 100%;
+	/* height: 410px; */
+	height: calc(100% - 88px);
+	
+	overflow-x: hidden;
+	overflow-y: auto;
+	
+	background: #333B3C;
+}
+
+.ave-layersPath {
+	position: relative;
+    padding: 15px;
+	
+    background: #596466;
+    /* border: 2px rgba(0,0,0,0.1) solid; */
+	border-bottom: 1px rgb(55, 65, 67) solid;
+	
+    font-size: 14px;
+}
+
+.ave-layersList-area .content {
+	position: relative;
+	width: 100%;
+}
+
+.ave-layersList-area .content .item {
+	position: relative;
+	width: 100%;
+	
+	border-top: 1px #313a3b solid;
+	background: #3e494b;
+}
+
+.ave-layersList-area .content .item .itemArea {
+	z-index: 1;
+	width: 100%;
+	height: 17px;
+	padding-top: 11px;
+	padding-bottom: 11px;
+}
+
+.ave-layersList-area .content .item .itemAreaActive {
+	background: #416F69;
+}
+
+.ave-layersList-area .content .item .eye {
+	z-index: 2;
+	position: absolute;
+    width: 16px;
+    height: 10px;
+    top: 20px;
+    left: 9px;
+	
+	-moz-transform: translate3d( 0%, -50%, 0);
+	-ms-transform: translate3d( 0%, -50%, 0);
+	-webkit-transform: translate3d( 0%, -50%, 0);
+	-o-transform: translate3d( 0%, -50%, 0);
+	transform: translate3d( 0%, -50%, 0);
+	
+	background-image: url(../img/eyeIcon.png);
+	cursor: pointer;
+}
+
+.ave-layersList-area .content .item .eyeActive {
+	background-image: url(../img/eyeActiveIcon.png);
+}
+
+.ave-layersList-area .content .item .type {
+	z-index: 1;
+	float: left;
+    width: 12px;
+    height: 12px;
+    margin: 3px 0;
+	
+    border-radius: 100%;
+}
+
+.ave-layersList-area .content .item .typeGroup {
+	background: white;
+}
+
+.ave-layersList-area .content .item .typeLayer {
+	background: #20b4d0;
+}
+
+.ave-layersList-area .content .item .typePoint {
+	background: #ff3d6f;
+	cursor: pointer;
+}
+.ave-layersList-area .content .item .switchedOff {
+	background: #737373;
+}
+
+.ave-layersList-area .content .item .folder {
+	float: left;
+	width: 15px;
+	height: 12px;
+	margin: 3px 0 0 15px;
+	
+	background-image: url(../img/folderIco.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	cursor: pointer;
+}
+/* .ave-layersList-area .content .itemActive .folder {
+	background-image: url(../img/folderOpenIco.png);
+} */
+
+.ave-layersList-area .content .item .name {
+	z-index: 1;
+	float: left;
+	margin-left: 12px;
+	
+    font-size: 15px;
+}
+
+.ave-layersList-area .content .item .name input {
+    border: none;
+    background: #ffffff !important;
+    outline: none;
+}
+
+.ave-layersList-area .content .itemAreaActive .name {
+    color: white;
+}
+
+.ave-layersList-area .content .item .children {
+	display: none;
+}
+
+/* .ave-layersList-area .content .itemActive  .children {
+	display: block;
+} */
+
+.ave-layersList-area .content .item  .path {
+	z-index: 1;
+	position: absolute;
+    top: 20px;
+    bottom: 19px;
+	/* left: 40px; */
+}
+
+.ave-layersList-area .content .item  .path .area {
+	position: relative;
+	width:	100%;
+	height: 100%;
+}
+
+.ave-layersList-area .content .item  .path .area .listType {
+	position: absolute;
+	width: 2px;
+	height: 100%;
+	left: 5px;
+}
+
+.ave-layersList-area .content .item .path .area .listEnd {
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	top: 100%;
+	left: 2px;
+	
+	-moz-transform: translate3d( 0%, -50%, 0);
+	-ms-transform: translate3d( 0%, -50%, 0);
+	-webkit-transform: translate3d( 0%, -50%, 0);
+	-o-transform: translate3d( 0%, -50%, 0);
+	transform: translate3d( 0%, -50%, 0);
+	
+	border-radius: 100%;
+}
+
+.ave-layersList-area .content .item .point {
+	background: #374143;
+}
+
+.ave-layersList-area .content .item .point .itemArea {
+	border-top: 1px #313a3b solid;
+	/* padding-left: 70px; */
+}
+
+.ave-layersList-area .content .item .point .itemArea:hover {
+	background: rgba(32,180,208,0.1);
+}
+
+.ave-layersList-area .content .item .point .itemAreaActive {
+	background: rgba(32,180,208,0.3);
+}
+
+.ave-layersList-area .content .item .point .itemAreaActive:hover {
+	background: rgba(32,180,208,0.3);
+}
+
+.ave-layersList-area .content .item .point .point .name {
+	margin-left: 29px;
+}
+
+.ave-layersList-area .content .item .point .itemAreaActive .name {
+	color: white;
+}
+
+.ave-layersOptionsPanel {
+	position: absolute;
+	width: 100%;
+	height: 40px;
+	bottom: 0;
+	
+	border-top: 1px rgba(0,0,0,0.2) solid;
+	background: #3E494B;
+}
+
+.ave-layersOptionsPanel .item {
+	float: right;
+	position: relative;
+	height: 14px;
+	
+	padding: 13px;
+}
+.ave-layersOptionsPanel .item:hover {
+	background: #596466;
+}
+
+.ave-layersOptionsPanel .item img {
+	/* width: 14px; */
+	max-height: 14px;
+}
+
+/* hierarchy list */
+.ave-layersList-area .indent {
+	padding-left: 40px;
+}
+.ave-layersList-area .list .indent {
+	padding-left: 65px;
+}
+.ave-layersList-area .list .list .indent {
+	padding-left: 90px;
+}
+.ave-layersList-area .list .list .list .indent {
+	padding-left: 115px;
+}
+.ave-layersList-area .list .list .list .list .indent {
+	padding-left: 140px;
+}
+.ave-layersList-area .list .list .list .list .list .indent {
+	padding-left: 165px;
+}
+.ave-layersList-area .list .list .list .list .list .list .indent {
+	padding-left: 190px;
+}
+.ave-layersList-area .list .list .list .list .list .list .list .indent {
+	padding-left: 215px;
+}
